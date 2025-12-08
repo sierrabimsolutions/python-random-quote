@@ -1,0 +1,199 @@
+<Window x:Class="RevitBeamCalculator.UI.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Beam Calculator Settings"
+        Height="600" Width="500"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F5">
+
+    <Window.Resources>
+        <Style x:Key="HeaderText" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#1976D2"/>
+            <Setter Property="Margin" Value="0,16,0,8"/>
+        </Style>
+        <Style x:Key="LabelText" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,4"/>
+        </Style>
+        <Style x:Key="InputTextBox" TargetType="TextBox">
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Margin" Value="0,4"/>
+        </Style>
+        <Style x:Key="InputComboBox" TargetType="ComboBox">
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Margin" Value="0,4"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <!-- Default Loads Section -->
+                <TextBlock Text="Default Loads" Style="{StaticResource HeaderText}"/>
+                <Border Background="White" CornerRadius="4" Padding="16" Margin="0,0,0,8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Superimposed Dead Load:" Style="{StaticResource LabelText}"/>
+                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="SDLTextBox" Style="{StaticResource InputTextBox}"/>
+                        <TextBlock Grid.Row="0" Grid.Column="2" Text="psf" Style="{StaticResource LabelText}" Margin="8,4"/>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Default Live Load:" Style="{StaticResource LabelText}"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="LLTextBox" Style="{StaticResource InputTextBox}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="2" Text="psf" Style="{StaticResource LabelText}" Margin="8,4"/>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Default Slab Thickness:" Style="{StaticResource LabelText}"/>
+                        <TextBox Grid.Row="2" Grid.Column="1" x:Name="SlabThicknessTextBox" Style="{StaticResource InputTextBox}"/>
+                        <TextBlock Grid.Row="2" Grid.Column="2" Text="in" Style="{StaticResource LabelText}" Margin="8,4"/>
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Concrete Density:" Style="{StaticResource LabelText}"/>
+                        <TextBox Grid.Row="3" Grid.Column="1" x:Name="ConcreteDensityTextBox" Style="{StaticResource InputTextBox}"/>
+                        <TextBlock Grid.Row="3" Grid.Column="2" Text="pcf" Style="{StaticResource LabelText}" Margin="8,4"/>
+                    </Grid>
+                </Border>
+
+                <!-- Design Codes Section -->
+                <TextBlock Text="Design Codes" Style="{StaticResource HeaderText}"/>
+                <Border Background="White" CornerRadius="4" Padding="16" Margin="0,0,0,8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Design Method:" Style="{StaticResource LabelText}"/>
+                        <ComboBox Grid.Row="0" Grid.Column="1" x:Name="DesignMethodCombo" Style="{StaticResource InputComboBox}">
+                            <ComboBoxItem Content="LRFD" Tag="LRFD"/>
+                            <ComboBoxItem Content="ASD" Tag="ASD"/>
+                        </ComboBox>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Steel Code:" Style="{StaticResource LabelText}"/>
+                        <ComboBox Grid.Row="1" Grid.Column="1" x:Name="SteelCodeCombo" Style="{StaticResource InputComboBox}">
+                            <ComboBoxItem Content="AISC 360-22" Tag="AISC360_22"/>
+                            <ComboBoxItem Content="AISC 360-16" Tag="AISC360_16"/>
+                        </ComboBox>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Concrete Code:" Style="{StaticResource LabelText}"/>
+                        <ComboBox Grid.Row="2" Grid.Column="1" x:Name="ConcreteCodeCombo" Style="{StaticResource InputComboBox}">
+                            <ComboBoxItem Content="ACI 318-19" Tag="ACI318_19"/>
+                            <ComboBoxItem Content="ACI 318-14" Tag="ACI318_14"/>
+                        </ComboBox>
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Load Code:" Style="{StaticResource LabelText}"/>
+                        <ComboBox Grid.Row="3" Grid.Column="1" x:Name="LoadCodeCombo" Style="{StaticResource InputComboBox}">
+                            <ComboBoxItem Content="ASCE 7-22" Tag="ASCE7_22"/>
+                            <ComboBoxItem Content="ASCE 7-16" Tag="ASCE7_16"/>
+                        </ComboBox>
+
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Wood Code:" Style="{StaticResource LabelText}"/>
+                        <ComboBox Grid.Row="4" Grid.Column="1" x:Name="WoodCodeCombo" Style="{StaticResource InputComboBox}">
+                            <ComboBoxItem Content="NDS-2024" Tag="NDS_2024"/>
+                            <ComboBoxItem Content="NDS-2018" Tag="NDS_2018"/>
+                        </ComboBox>
+                    </Grid>
+                </Border>
+
+                <!-- Deflection Criteria Section -->
+                <TextBlock Text="Deflection Criteria" Style="{StaticResource HeaderText}"/>
+                <Border Background="White" CornerRadius="4" Padding="16" Margin="0,0,0,8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <CheckBox Grid.Row="0" Grid.Column="0" x:Name="CheckLLDeflection" Content="Check Live Load Deflection"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="L /" Style="{StaticResource LabelText}" HorizontalAlignment="Right"/>
+                        <TextBox Grid.Row="0" Grid.Column="2" x:Name="LLDeflectionLimit" Style="{StaticResource InputTextBox}" Width="60" HorizontalAlignment="Left"/>
+
+                        <CheckBox Grid.Row="1" Grid.Column="0" x:Name="CheckTotalDeflection" Content="Check Total Deflection"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="L /" Style="{StaticResource LabelText}" HorizontalAlignment="Right"/>
+                        <TextBox Grid.Row="1" Grid.Column="2" x:Name="TotalDeflectionLimit" Style="{StaticResource InputTextBox}" Width="60" HorizontalAlignment="Left"/>
+
+                        <CheckBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" x:Name="CheckVibration" Content="Check Floor Vibration (experimental)" Margin="0,8,0,0"/>
+                    </Grid>
+                </Border>
+
+                <!-- Calculation Options Section -->
+                <TextBlock Text="Calculation Options" Style="{StaticResource HeaderText}"/>
+                <Border Background="White" CornerRadius="4" Padding="16" Margin="0,0,0,8">
+                    <StackPanel>
+                        <CheckBox x:Name="IncludeSelfWeight" Content="Include beam self-weight" Margin="0,4"/>
+                        <CheckBox x:Name="UseEffectiveLength" Content="Use effective length for buckling" Margin="0,4"/>
+                        <CheckBox x:Name="ConsiderLateralBracing" Content="Consider lateral bracing from deck" Margin="0,4"/>
+                        <CheckBox x:Name="UseReducedLiveLoad" Content="Apply live load reduction (ASCE 7)" Margin="0,4"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Material Defaults Section -->
+                <TextBlock Text="Material Defaults" Style="{StaticResource HeaderText}"/>
+                <Border Background="White" CornerRadius="4" Padding="16" Margin="0,0,0,8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Default Steel Fy:" Style="{StaticResource LabelText}"/>
+                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="SteelFyTextBox" Style="{StaticResource InputTextBox}"/>
+                        <TextBlock Grid.Row="0" Grid.Column="2" Text="ksi" Style="{StaticResource LabelText}" Margin="8,4"/>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Default Steel E:" Style="{StaticResource LabelText}"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="SteelETextBox" Style="{StaticResource InputTextBox}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="2" Text="ksi" Style="{StaticResource LabelText}" Margin="8,4"/>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Default Concrete f'c:" Style="{StaticResource LabelText}"/>
+                        <TextBox Grid.Row="2" Grid.Column="1" x:Name="ConcreteFcTextBox" Style="{StaticResource InputTextBox}"/>
+                        <TextBlock Grid.Row="2" Grid.Column="2" Text="ksi" Style="{StaticResource LabelText}" Margin="8,4"/>
+                    </Grid>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Buttons -->
+        <Border Grid.Row="1" Background="White" CornerRadius="4" Padding="16" Margin="0,16,0,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Reset to Defaults" Padding="16,8" Margin="4,0" Click="ResetDefaults_Click"/>
+                <Button Content="Cancel" Padding="16,8" Margin="4,0" Click="Cancel_Click"/>
+                <Button Content="Save" Padding="16,8" Margin="4,0" Click="Save_Click" IsDefault="True"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

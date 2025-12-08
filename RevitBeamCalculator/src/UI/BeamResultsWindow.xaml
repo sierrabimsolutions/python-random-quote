@@ -1,0 +1,285 @@
+<Window x:Class="RevitBeamCalculator.UI.BeamResultsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:oxy="http://oxyplot.org/wpf"
+        Title="Beam Analysis Results"
+        Height="750" Width="950"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F5">
+
+    <Window.Resources>
+        <Style x:Key="HeaderText" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#1976D2"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+        <Style x:Key="LabelText" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#666666"/>
+            <Setter Property="Margin" Value="0,2"/>
+        </Style>
+        <Style x:Key="ValueText" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Margin" Value="0,2"/>
+        </Style>
+        <Style x:Key="PassStatus" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#4CAF50"/>
+        </Style>
+        <Style x:Key="FailStatus" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#F44336"/>
+        </Style>
+        <Style x:Key="CardBorder" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Padding" Value="16"/>
+            <Setter Property="Margin" Value="4"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="8" ShadowDepth="1" Opacity="0.15"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Style="{StaticResource CardBorder}" Margin="4,4,4,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="{Binding BeamDisplayName}" FontSize="20" FontWeight="Bold" Foreground="#333"/>
+                    <TextBlock Text="{Binding BeamTypeName}" FontSize="14" Foreground="#666" Margin="0,4,0,0"/>
+                </StackPanel>
+
+                <Border Grid.Column="1"
+                        Background="{Binding StatusBackground}"
+                        CornerRadius="20"
+                        Padding="20,8"
+                        VerticalAlignment="Center">
+                    <TextBlock Text="{Binding StatusText}"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Foreground="White"/>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Main Content -->
+        <TabControl Grid.Row="1" Margin="4">
+            <!-- Summary Tab -->
+            <TabItem Header="Summary">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Beam Properties -->
+                        <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource CardBorder}">
+                            <StackPanel>
+                                <TextBlock Text="Beam Properties" Style="{StaticResource HeaderText}"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Length:" Style="{StaticResource LabelText}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding BeamLength}" Style="{StaticResource ValueText}" Margin="8,2"/>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Section:" Style="{StaticResource LabelText}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SectionName}" Style="{StaticResource ValueText}" Margin="8,2"/>
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Material:" Style="{StaticResource LabelText}"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding MaterialName}" Style="{StaticResource ValueText}" Margin="8,2"/>
+
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Level:" Style="{StaticResource LabelText}"/>
+                                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding LevelName}" Style="{StaticResource ValueText}" Margin="8,2"/>
+
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Support:" Style="{StaticResource LabelText}"/>
+                                    <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding SupportCondition}" Style="{StaticResource ValueText}" Margin="8,2"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Load Summary -->
+                        <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource CardBorder}">
+                            <StackPanel>
+                                <TextBlock Text="Applied Loads" Style="{StaticResource HeaderText}"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Tributary Width:" Style="{StaticResource LabelText}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding TributaryWidth}" Style="{StaticResource ValueText}" Margin="8,2"/>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Dead Load:" Style="{StaticResource LabelText}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding DeadLoad}" Style="{StaticResource ValueText}" Margin="8,2"/>
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Live Load:" Style="{StaticResource LabelText}"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding LiveLoad}" Style="{StaticResource ValueText}" Margin="8,2"/>
+
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Total (Service):" Style="{StaticResource LabelText}"/>
+                                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding TotalServiceLoad}" Style="{StaticResource ValueText}" Margin="8,2"/>
+
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Governing Combo:" Style="{StaticResource LabelText}"/>
+                                    <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding GoverningCombo}" Style="{StaticResource ValueText}" Margin="8,2"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Analysis Results -->
+                        <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource CardBorder}">
+                            <StackPanel>
+                                <TextBlock Text="Analysis Results" Style="{StaticResource HeaderText}"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Max Moment:" Style="{StaticResource LabelText}"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding MaxMoment}" Style="{StaticResource ValueText}" Margin="8,2"/>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Max Shear:" Style="{StaticResource LabelText}"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding MaxShear}" Style="{StaticResource ValueText}" Margin="8,2"/>
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Max Deflection:" Style="{StaticResource LabelText}"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding MaxDeflection}" Style="{StaticResource ValueText}" Margin="8,2"/>
+
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Reactions:" Style="{StaticResource LabelText}"/>
+                                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Reactions}" Style="{StaticResource ValueText}" Margin="8,2"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- D/C Summary -->
+                        <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource CardBorder}">
+                            <StackPanel>
+                                <TextBlock Text="Design Summary" Style="{StaticResource HeaderText}"/>
+                                <TextBlock Text="Maximum D/C Ratio" Style="{StaticResource LabelText}" Margin="0,4"/>
+                                <TextBlock Text="{Binding MaxDCRatio}" FontSize="32" FontWeight="Bold" Foreground="{Binding DCRatioColor}"/>
+                                <TextBlock Text="{Binding GoverningCheck}" Style="{StaticResource LabelText}" Margin="0,4"/>
+                                <TextBlock Text="{Binding DesignCode}" Style="{StaticResource LabelText}" Foreground="#999"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Design Checks -->
+                        <Border Grid.Row="2" Grid.ColumnSpan="2" Style="{StaticResource CardBorder}">
+                            <StackPanel>
+                                <TextBlock Text="Design Checks" Style="{StaticResource HeaderText}"/>
+                                <DataGrid x:Name="DesignChecksGrid"
+                                          AutoGenerateColumns="False"
+                                          IsReadOnly="True"
+                                          HeadersVisibility="Column"
+                                          GridLinesVisibility="Horizontal"
+                                          BorderThickness="0"
+                                          RowHeight="28">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Check" Binding="{Binding Name}" Width="200"/>
+                                        <DataGridTextColumn Header="Demand" Binding="{Binding DemandDisplay}" Width="100"/>
+                                        <DataGridTextColumn Header="Capacity" Binding="{Binding CapacityDisplay}" Width="100"/>
+                                        <DataGridTextColumn Header="D/C" Binding="{Binding RatioDisplay}" Width="80"/>
+                                        <DataGridTextColumn Header="Status" Binding="{Binding StatusDisplay}" Width="80"/>
+                                        <DataGridTextColumn Header="Reference" Binding="{Binding CodeReference}" Width="120"/>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Diagrams Tab -->
+            <TabItem Header="Diagrams">
+                <Grid Margin="8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <oxy:PlotView Grid.Row="0" x:Name="MomentPlot" Margin="4"/>
+                    <oxy:PlotView Grid.Row="1" x:Name="ShearPlot" Margin="4"/>
+                    <oxy:PlotView Grid.Row="2" x:Name="DeflectionPlot" Margin="4"/>
+                </Grid>
+            </TabItem>
+
+            <!-- Details Tab -->
+            <TabItem Header="Detailed Calculations">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="16">
+                    <TextBlock x:Name="DetailedCalcsText"
+                               FontFamily="Consolas"
+                               FontSize="11"
+                               TextWrapping="Wrap"/>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+
+        <!-- Footer Buttons -->
+        <Border Grid.Row="2" Style="{StaticResource CardBorder}" Margin="4,8,4,4">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <CheckBox Grid.Column="0"
+                          x:Name="WriteToModelCheckbox"
+                          Content="Write results to model parameters"
+                          VerticalAlignment="Center"/>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <Button Content="Export PDF" Padding="16,8" Margin="4,0" Click="ExportPdf_Click"/>
+                    <Button Content="Export Excel" Padding="16,8" Margin="4,0" Click="ExportExcel_Click"/>
+                    <Button Content="Close" Padding="16,8" Margin="4,0" Click="Close_Click" IsDefault="True"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
